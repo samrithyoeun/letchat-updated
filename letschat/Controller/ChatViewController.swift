@@ -48,11 +48,39 @@ class ChatViewController: UIViewController {
         
         messageTextField.delegate = self
         updateTableContentInset(forTableView: chatTableView)
-        retereiveOldMessage()
-        connectToSocket()
-        joinGroup()
-        listenToSocket()
-       
+        setupSocket()
+    }
+    
+    public func setupSocket(){
+        socket.connect()
+        
+        let socketConnectionStatus = socket.status
+        
+        switch socketConnectionStatus {
+        case SocketIOStatus.connected:
+            debug("socket connected")
+        case SocketIOStatus.connecting:
+            debug("socket connecting")
+        case SocketIOStatus.disconnected:
+            debug("socket disconnected")
+        case SocketIOStatus.notConnected:
+            debug("socket not connected")
+        }
+        
+        socket.connect()
+        socket.on(clientEvent: .connect) {data, ack in
+            debug("socket connected")
+        }
+    
+        socket.emit("join", User.getUserId())
+        socket.on("join") { (any, emit) in
+            debug(any)
+            debug(emit)
+        }
+        socket.on(clientEvent: .error) { (error, emit) in
+            debug(error)
+            debug(emit)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,26 +102,6 @@ class ChatViewController: UIViewController {
         sendMessage(Message(username: User.getUserId(), time: "", content: "Some message from samrith", type: ""))
         chatTableView.reloadData()
 //        scrollToBottom()
-    }
-    
-    private func connectToSocket(){
-        socket.connect()
-        socket.on(clientEvent: .connect) {data, ack in
-            print("socket connected")
-        }
-    }
-    
-    private func listenToSocket(){
-        
-        socket.on("addMessage") { (any, ack) in
-            print(any)
-            print(ack)
-        }
-    }
-    
-    private func joinGroup(){
-        socket.emit("join", Channel.getChannelId())
-        print(Channel.getChannelId())
     }
     
     private func sendMessage(_ message: Message){
@@ -124,8 +132,8 @@ class ChatViewController: UIViewController {
         let endpoint = "/channels/\(channelId)/messages?limit=\(limit)"
         APIRequest.get(endPoint: endpoint){ (json, code, error) in
             print("----- retreive old message")
-            print(error)
-            print(code)
+            print(error ?? "")
+            print(code ?? "")
             print(json)
             //TODO: handle old message
         }

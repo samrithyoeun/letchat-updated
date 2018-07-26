@@ -16,3 +16,7 @@ func alert(message: String, title: String = "") {
     alertController.addAction(OKAction)
     UIApplication.topViewController()?.present(alertController, animated: true, completion: nil)
 }
+
+func debug(_ item: Any){
+    print(" ==========> \(item)")
+}
