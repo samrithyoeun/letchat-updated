@@ -42,6 +42,7 @@ class ChatViewController: UIViewController {
     var selectedKeyboard = true
     var fetchingMore = false
     var inputImageName = "lol"
+    var skipTime = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,10 +52,12 @@ class ChatViewController: UIViewController {
         stickerViewHeight.constant = 0
         
         chatTableView.re.delegate = self
-        chatTableView.re.scrollViewDidReachTop = { scrollView in
-            debug("scrollViewDidReachTop")
+        chatTableView.re.scrollViewDidReachBottom = {
+            scrollView in
+            debug("scrollview reach bottom")
             if !self.fetchingMore {
                 self.beginBatchFetch()
+                
             }
         }
         
@@ -157,11 +160,22 @@ class ChatViewController: UIViewController {
     
     func beginBatchFetch() {
         fetchingMore = true
+        skipTime += 1
         debug("beginBatchFetch!")
         chatTableView.reloadSections(IndexSet(integer: 1), with: .none)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
-//            let newItems = (self.conversations.count...self.conversations.count + 12).map { index in index }
-//            self.conver.append(contentsOf: newItems)
+            SocketIOManager.shared.retereiveOldMessage(limit: 10, skipTime: self.skipTime, callback: { (result) in
+                switch result {
+                case .success(let oldMessages):
+                    for message in oldMessages {
+                        self.conversations.append(message)
+                    }
+                    self.chatTableView.reloadData()
+                case .failure(let error):
+                    debug(error)
+                }
+            })
+            
             debug("start reload data")
             self.fetchingMore = false
             self.chatTableView.reloadData()
@@ -170,6 +184,7 @@ class ChatViewController: UIViewController {
     
     @objc private func keyboardWillAppear() {
         inputImageName = "lol"
+        stickerViewHeight.constant = 0
         inputButton.setImage(UIImage(named: inputImageName), for: .normal)
     }
     

@@ -17,6 +17,7 @@ class SocketIOManager: NSObject {
     let manager = SocketManager(socketURL: URL(string: ServerEnvironment.socket)!, config: [.log(true), .compress])
     lazy var socket = manager.socket(forNamespace: "/chatroom")
     
+    
     public func setupSocket(){
         socket.connect()
         joinChatGroup()
@@ -85,16 +86,20 @@ class SocketIOManager: NSObject {
         self.socket.emit("newMessage", data)
     }
     
-    public func retereiveOldMessage(){
-        let limit = 20
+    public func retereiveOldMessage(limit: Int = 10, skipTime: Int = 0, callback: @escaping (Result<[Message]>) ->()) {
+        
         let channelId = Channel.getChannelId()
         let endpoint = "/channels/\(channelId)/messages?limit=\(limit)"
         APIRequest.get(endPoint: endpoint){ (json, code, error) in
             debug("retreive old message")
             print(error ?? "")
             print(code ?? "")
-            print(json)
-            //TODO: handle old message
+            if error == nil {
+                let messages = Message.jsonMapping(json)
+                callback(Result.success(messages))
+            } else {
+                callback(Result.failure(error.debugDescription))
+            }
         }
     }
     

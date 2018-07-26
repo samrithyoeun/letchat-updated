@@ -28,6 +28,23 @@ struct Message {
         debug(newMessage)
         return newMessage
     }
+    
+    static func jsonMapping(_ data: JSON) -> [Message] {
+        let json = data["data"].arrayValue
+        var messages = [Message]()
+        for message in json {
+            let content = message["content"].stringValue
+            let username = message["username"].stringValue
+            let time = message["createdAt"].stringValue
+            let type = message["types"].stringValue
+            let newMessage = Message(username: username, time: time, content: content, type: type)
+            messages.append(newMessage)
+        }
+        messages.reverse()
+        debug(messages)
+        return messages
+    }
+    
 }
 
 enum MessageType: String {
