@@ -13,12 +13,11 @@ class InComingMessageTableViewCell: TemplateTableViewCell {
     @IBOutlet weak var senderInfoLabel: UILabel!
     @IBOutlet weak var senderMessageLabel: UILabel!
     
-    func bindDataFrom(_ message: Message) {
+    override func bindDataFrom(_ message: Message) {
         super.contentsView = self.contentView
         super.userLabel = senderInfoLabel
         super.messagesLabel = senderMessageLabel
         super.setMessage(message)
         super.handleThemeChange()
-       
     }
 }

@@ -13,7 +13,7 @@ class InComingImageTableViewCell: TemplateTableViewCell {
     @IBOutlet weak var senderInfoLabel: UILabel!
     @IBOutlet weak var senderImageView: UIImageView!
     
-    func bindDataFrom(_ message: Message) {
+    override func bindDataFrom(_ message: Message) {
         super.contentsView = self.contentView
         super.userLabel = senderInfoLabel
         super.stickerImageView = senderImageView

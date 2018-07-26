@@ -9,6 +9,7 @@
 import UIKit
 
 class TemplateTableViewCell: UITableViewCell {
+    
     var userLabel: UILabel?
     var stickerImageView: UIImageView?
     var messagesLabel: UILabel?
@@ -24,6 +25,10 @@ class TemplateTableViewCell: UITableViewCell {
     public func handleThemeChange(){
         let theme = ThemeManager.shared.getTheme()
         changeThemeTo(theme)
+    }
+    
+   func bindDataFrom(_ message: Message) {
+         fatalError("Must Override")
     }
 }
 

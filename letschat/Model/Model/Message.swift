@@ -7,10 +7,28 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 struct Message {
     var username = ""
     var time = ""
     var content = ""
     var type = ""
+    
+    static func jsonMapping(_ data: Data) -> Message {
+        let jsonData = try! JSON(data: data)
+        let array = jsonData.arrayValue
+        let message = array[0]
+        let content = message["content"].stringValue
+        let username = message["username"].stringValue
+        let time = message["createdAt"].stringValue
+        let newMessage = Message(username: username, time: time, content: content, type: "")
+        debug(newMessage)
+        return newMessage
+    }
+}
+
+enum MessageType: String {
+    case sticker = "sticker"
+    case message = "message"
 }

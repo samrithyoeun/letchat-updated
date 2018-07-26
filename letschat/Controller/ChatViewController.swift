@@ -35,73 +35,32 @@ class ChatViewController: UIViewController {
     lazy var buttonGroup = [settingButton, inputButton, sendButton, sadFaceButton, supriseFaceButton, likeButton, smileButton]
     lazy var viewGroup = [chatTableView, view, stickerView, inputsView, headerView]
     
-    let manager = SocketManager(socketURL: URL(string: ServerEnvironment.socket)!, config: [.log(true), .compress])
-    lazy var socket = manager.socket(forNamespace: "/chatroom")
-    
     var conversations = [Message]()
-    var testSendingMessage  = 1
-    
-    
+    var message = Message()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         chatTableView.delegate = self
         chatTableView.dataSource = self
-        
         messageTextField.delegate = self
+        
         updateTableContentInset(forTableView: chatTableView)
         
-       setupSocket()
-    }
-    
-    public func setupSocket(){
-
-      
-        socket.connect()
-
-        socket.on(clientEvent: .connect) {data, ack in
-            debug("socket connected")
-            self.socket.emit("join", User.getUserId())
+        SocketIOManager.shared.setupSocket()
+        SocketIOManager.shared.handleNewMessage { (data) in
             
-            let data : [String: Any] = ["userId": User.getUserId(),
-                                        "content": "some message"
-            ]
-            
-            self.socket.emit("newMessage", data)
-            self.retereiveOldMessage()
+            self.message = Message.jsonMapping(data)
+            if self.message.username == User.getUsername() {
+                // just a response of the sent message from sender
+            } else {
+                self.conversations.append(self.message)
+                self.chatTableView.reloadData()
+                self.scrollToBottom()
+            }
         }
-
-        socket.on(clientEvent: .error) {data, ack in
-            debug("socket error")
+        SocketIOManager.shared.handleOnlineUser { (any) in
+            print(any)
         }
-        
-        socket.on(clientEvent: .disconnect) {data, ack in
-            debug("socket disconnect")
-        }
-        
-        socket.on(clientEvent: .statusChange) {data, ack in
-            debug("socket status change")
-        }
-        
-        socket.on(clientEvent: .ping) {data, ack in
-            debug("socket status change")
-        }
-        
-        socket.on("addMessage") { (any, ack) in
-            debug(any)
-            debug(ack)
-        }
-        
-        socket.on("count") { (any, ack) in
-
-            debug(any)
-            debug(ack)
-        }
-        
-        
-        
-     
-        
         
     }
     
@@ -113,33 +72,19 @@ class ChatViewController: UIViewController {
     }
     
     @IBAction func keyboardButtonTapped(_ sender: Any) {
-//        inputViewBottomConstraint.constant += 50
-//        print(chatTableButtomConstriant.constant)
-//        updateTableContentInset(forTableView: chatTableView)
-//        scrollToBottom()
 
     }
     
     @IBAction func sendButtonTapped(_ sender: Any) {
-        sendMessage(Message(username: User.getUserId(), time: "", content: "Some message from samrith", type: ""))
+        message.username = "sender"
+        message.time = Date.getCurrentTime()
+        message.content = messageTextField.text ?? ""
+        SocketIOManager.shared.sendMessage(type: MessageType.message, content: message.content)
+        conversations.append(message)
         chatTableView.reloadData()
-//        scrollToBottom()
+        scrollToBottom()
     }
-    
-    private func sendMessage(_ message: Message){
 
-//        let data = ["userId": User.getUserId(),
-//                    "content": message.content
-//                    ]
-//        if let theJSONData = try?  JSONSerialization.data(withJSONObject: data, options: .prettyPrinted),
-//            let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-//                print("JSON string = \n\(theJSONText)")
-//
-//            socket.emit("newMessage", theJSONText)
-//        }
-
-    
-    }
     
     private func setDummyData(){
         conversations.append(Message(username: "Sam", time: "12:00pm", content: "Hello there what is the 1 ?", type: "message"))
@@ -148,23 +93,9 @@ class ChatViewController: UIViewController {
     
     }
     
-    private func retereiveOldMessage(){
-        let limit = 20
-        let channelId = Channel.getChannelId()
-        let endpoint = "/channels/\(channelId)/messages?limit=\(limit)"
-        APIRequest.get(endPoint: endpoint){ (json, code, error) in
-            print("----- retreive old message")
-            print(error ?? "")
-            print(code ?? "")
-            print(json)
-            //TODO: handle old message
-        }
-    }
-    
     private func updateTableContentInset(forTableView tv: UITableView) {
         let numSections = tv.numberOfSections
         var contentInsetTop = chatTableView.bounds.size.height
-        
         
         for section in 0..<numSections {
             let numRows = tv.numberOfRows(inSection: section)
@@ -207,9 +138,22 @@ extension ChatViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingMessage") as! InComingMessageTableViewCell
+        
         let message = conversations[indexPath.row]
+        var cell: TemplateTableViewCell
+        if message.type == "sticker" {
+            if message.username == "sender" {
+                cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingImage") as! OutGoingImageTableViewCell
+            }else {
+                cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingImage") as! InComingImageTableViewCell
+            }
+        } else {
+            if message.username == "sender" {
+                cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingMessage") as! OutGoingMessageTableViewCell
+            }else {
+                cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingMessage") as! InComingMessageTableViewCell
+            }
+        }
         cell.bindDataFrom(message)
         return cell
     }
@@ -269,6 +213,3 @@ extension ChatViewController: ThemeManagerProtocol{
         }
     }
 }
-
-
-

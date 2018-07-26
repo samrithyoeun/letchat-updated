@@ -20,3 +20,12 @@ func alert(message: String, title: String = "") {
 func debug(_ item: Any){
     print(" ==========> \(item)")
 }
+
+func convertToJson(data: [Any]) -> Data? {
+    if let theJSONData = try? JSONSerialization.data(
+        withJSONObject: data,
+        options: []) {
+        return theJSONData
+    }
+    return nil
+}

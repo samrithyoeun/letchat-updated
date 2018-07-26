@@ -66,10 +66,10 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func joinButtontTapped(_ sender: UIButton) {
-       self.goToChatScreen()
+        self.goToChatScreen()
     }
     
-    private func setSelectedChannel(_ id: String, callback: @escaping ()->()){
+    private func setSelectedChannel(_ id: String, callback: @escaping ()->()) {
         print("==set selected channel===")
         let params: [String: Any] = ["username": self.usernameTextField.text ?? "", "channelId": id]
         APIRequest.postRequest(endPoint: "/users", headers: [:], parameters: params, callback: { (json, code, error) in
@@ -163,7 +163,7 @@ extension LoginViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print("start editing")
         UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y - 200, width:self.view.frame.size.width, height:self.view.frame.size.height);
+            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y - 100, width:self.view.frame.size.width, height:self.view.frame.size.height);
             
         })
     }
@@ -171,7 +171,7 @@ extension LoginViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         print("stop editing")
         UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y + 200, width:self.view.frame.size.width, height:self.view.frame.size.height);
+            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y + 100, width:self.view.frame.size.width, height:self.view.frame.size.height);
             
         })
     }

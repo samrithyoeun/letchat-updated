@@ -12,5 +12,6 @@ struct Config {
     static let theme = "Theme"
     static let name = "ThemeName"
     static let user = "userId"
+    static let username = "username"
     static let channel = "channelId"
 }

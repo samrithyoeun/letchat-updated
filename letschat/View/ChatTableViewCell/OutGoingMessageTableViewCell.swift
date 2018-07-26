@@ -13,7 +13,7 @@ class OutGoingMessageTableViewCell: TemplateTableViewCell {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var userInfoLabel: UILabel!
     
-    func bindDataFrom(_ message: Message) {
+    override func bindDataFrom(_ message: Message) {
         super.contentsView = self.contentView
         super.userLabel = userInfoLabel
         super.messagesLabel = messageLabel
