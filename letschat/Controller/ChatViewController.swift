@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import ReverseExtension
 
 class ChatViewController: UIViewController {
     
@@ -47,7 +48,12 @@ class ChatViewController: UIViewController {
         chatTableView.dataSource = self
         messageTextField.delegate = self
         stickerViewHeight.constant = 0
-        updateTableContentInset(forTableView: chatTableView)
+        
+        chatTableView.re.delegate = self
+        chatTableView.re.scrollViewDidReachTop = { scrollView in
+            debug("scrollViewDidReachTop")
+        }
+        
         SocketIOManager.shared.setupSocket()
         SocketIOManager.shared.handleNewMessage { (data) in
             
@@ -58,6 +64,7 @@ class ChatViewController: UIViewController {
                 self.conversations.append(self.message)
                 self.chatTableView.reloadData()
                 self.scrollToBottom()
+                self.handleBeepSound()
             }
         }
         SocketIOManager.shared.handleOnlineUser { (any) in
@@ -81,16 +88,6 @@ class ChatViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func keyboardWillAppear() {
-        inputImageName = "lol"
-        inputButton.setImage(UIImage(named: inputImageName), for: .normal)
-    }
-    
-    @objc func keyboardWillDisappear() {
-        inputImageName = "keyboard-white"
-        inputButton.setImage(UIImage(named: inputImageName), for: .normal)
     }
    
     @IBAction func likeButtonTapped(_ sender: Any) {
@@ -130,7 +127,7 @@ class ChatViewController: UIViewController {
         message.content = messageTextField.text ?? "some error text"
         message.type = MessageType.message.rawValue
         SocketIOManager.shared.sendMessage(type: MessageType.message, content: message.content)
-        conversations.append(message)
+        conversations.insert(message, at: 0)
         chatTableView.reloadData()
         scrollToBottom()
     }
@@ -142,35 +139,27 @@ class ChatViewController: UIViewController {
         message.type = MessageType.sticker.rawValue
         message.content = sticker
         SocketIOManager.shared.sendMessage(type: MessageType.sticker, content: message.content)
-        conversations.append(message)
+        conversations.insert(message, at: 0)
         chatTableView.reloadData()
         scrollToBottom()
     }
     
-    private func updateTableContentInset(forTableView tv: UITableView) {
-        let numSections = tv.numberOfSections
-        var contentInsetTop = chatTableView.bounds.size.height
-        
-        for section in 0..<numSections {
-            let numRows = tv.numberOfRows(inSection: section)
-            let sectionHeaderHeight = tv.rectForHeader(inSection: section).size.height
-            let sectionFooterHeight = tv.rectForFooter(inSection: section).size.height
-            contentInsetTop -= sectionHeaderHeight + sectionFooterHeight
-            for i in 0..<numRows {
-                let rowHeight = tv.rectForRow(at: IndexPath(item: i, section: section)).size.height
-                contentInsetTop -= rowHeight
-                if contentInsetTop <= 0 {
-                    contentInsetTop = 0
-                    break
-                }
-            }
-            if contentInsetTop == 0 {
-                break
-            }
+    private func handleBeepSound(){
+        let setting = UserDefaults.standard.bool(forKey: Config.sound)
+        if setting == true {
+            SoundPlayer.shared.playSound()
         }
-        tv.contentInset = UIEdgeInsetsMake(contentInsetTop, 0, 0, 0)
     }
     
+    @objc private func keyboardWillAppear() {
+        inputImageName = "lol"
+        inputButton.setImage(UIImage(named: inputImageName), for: .normal)
+    }
+    
+    @objc private func keyboardWillDisappear() {
+        inputImageName = "keyboard-white"
+        inputButton.setImage(UIImage(named: inputImageName), for: .normal)
+    }
 }
 
 extension ChatViewController: UITableViewDelegate {
@@ -180,7 +169,7 @@ extension ChatViewController: UITableViewDelegate {
     
     func scrollToBottom(){
         DispatchQueue.main.async {
-            let indexPath = IndexPath(row: self.conversations.count-1, section: 0)
+            let indexPath = IndexPath(row: 0, section: 0)
             self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
     }
