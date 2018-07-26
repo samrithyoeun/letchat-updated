@@ -75,7 +75,6 @@ class ChatViewController: UIViewController {
         changeThemeTo(theme)
         chatTableView.reloadData()
         
-        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: Notification.Name.UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: Notification.Name.UIKeyboardWillShow, object: nil)
     }

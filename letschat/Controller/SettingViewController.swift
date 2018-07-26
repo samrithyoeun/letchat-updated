@@ -34,10 +34,11 @@ class SettingViewController: UITableViewController {
         super.viewDidLoad()
         navigationController?.isToolbarHidden = true
         ControllerManager.shared.setting = self
-        //TODO: do something
-        // dark theme
-        //  selection style in theme table
         
+        soundButtonTrigger = UserDefaults.standard.bool(forKey: Config.sound)
+        if soundButtonTrigger == false {
+            soundButton.setImage(UIImage(named: "round"), for: .normal)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,8 +46,19 @@ class SettingViewController: UITableViewController {
         refreshUI()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UserDefaults.standard.set(soundButtonTrigger, forKey: Config.sound)
+    }
+    
     @IBAction func soundButtonTapped(_ sender: UIButton) {
-        
+        if soundButtonTrigger == false {
+            soundButton.setImage(UIImage(named: "checked"), for: .normal)
+            soundButtonTrigger = true
+        } else {
+            soundButtonTrigger = false
+            soundButton.setImage(UIImage(named: "round"), for: .normal)
+        }
     }
     
     @IBAction func closeButtonTapped(_ sender: UIButton) {
@@ -73,7 +85,6 @@ extension SettingViewController: ThemeManagerProtocol {
                 button?.setTitleColor(secondColor, for: .normal)
             }
             soundButton.imageView?.tintColor = secondColor
-            
             themeChooserImageView.tintColor = secondColor
             
             for label in labelGroup {

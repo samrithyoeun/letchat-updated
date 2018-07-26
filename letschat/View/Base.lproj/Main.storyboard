@@ -516,7 +516,7 @@
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4S7-wq-sDH">
                                                     <rect key="frame" x="260" y="17.5" width="25" height="25"/>
-                                                    <state key="normal" image="checked-white"/>
+                                                    <state key="normal" image="checked"/>
                                                     <connections>
                                                         <action selector="soundButtonTapped:" destination="QPE-xw-erZ" eventType="touchUpInside" id="NtB-oc-JqK"/>
                                                     </connections>
@@ -597,6 +597,9 @@
                                     <rect key="frame" x="20" y="17" width="87" height="28"/>
                                     <fontDescription key="fontDescription" name="Mina-Regular" family="Mina" pointSize="20"/>
                                     <state key="normal" title="Theme" image="backward-white"/>
+                                    <connections>
+                                        <action selector="themeButtonTapped:" destination="DAh-Tk-jUk" eventType="touchUpInside" id="iUc-Ja-bns"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -664,7 +667,7 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checked-white" translatesAutoresizingMaskIntoConstraints="NO" id="eGs-j6-ONs">
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checked" translatesAutoresizingMaskIntoConstraints="NO" id="eGs-j6-ONs">
                                                     <rect key="frame" x="264" y="21" width="26" height="26"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="26" id="DzB-Hn-5wp"/>
@@ -739,7 +742,7 @@
                                                     <color key="textColor" red="0.26666666666666666" green="0.19607843137254902" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checked-white" translatesAutoresizingMaskIntoConstraints="NO" id="KIb-IE-Tse">
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checked" translatesAutoresizingMaskIntoConstraints="NO" id="KIb-IE-Tse">
                                                     <rect key="frame" x="264" y="21" width="26" height="26"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="26" id="rvZ-ZY-QaV"/>
@@ -814,7 +817,7 @@
                                                     <color key="textColor" red="0.1176470588" green="0.41568627450000001" blue="0.62352941179999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checked-white" translatesAutoresizingMaskIntoConstraints="NO" id="9to-D9-R1C">
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checked" translatesAutoresizingMaskIntoConstraints="NO" id="9to-D9-R1C">
                                                     <rect key="frame" x="264" y="21" width="26" height="26"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="26" id="6f7-EQ-56f"/>
@@ -1070,7 +1073,7 @@
     </scenes>
     <resources>
         <image name="backward-white" width="25" height="25"/>
-        <image name="checked-white" width="25" height="25"/>
+        <image name="checked" width="25" height="25"/>
         <image name="cry" width="25" height="25"/>
         <image name="downward-white" width="25" height="25"/>
         <image name="forward-white" width="25" height="25"/>

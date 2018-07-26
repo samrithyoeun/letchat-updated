@@ -62,6 +62,10 @@ class ThemeViewController: UITableViewController {
         navigationController!.popViewController(animated: true)
     }
     
+    @IBAction func themeButtonTapped(_ sender: UIButton) {
+        navigationController!.popViewController(animated: true)
+    }
+    
     private func setCheckBox(index: Int) {
         for checkbox in checkBoxGroup {
             checkbox?.isHidden = true

@@ -36,7 +36,6 @@ class LoginViewController: UIViewController {
         ControllerManager.shared.login = self
         changeThemeTo(Theme.black)
         
-//        joinButton.isEnabled = false
         usernameTextField.delegate = self
         getChannel()
     }
@@ -78,7 +77,6 @@ class LoginViewController: UIViewController {
             if error == nil {
                 var user = User()
                 user.setData(json)
-//                self.joinButton.isEnabled = true
                 Channel.setChannelId(user.channelId)
                 User.setUserId(user.id)
                 Channel.setChannelName(channel.name)
@@ -90,7 +88,6 @@ class LoginViewController: UIViewController {
                     let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                     alertController.addAction(OKAction)
                     self.present(alertController, animated: true, completion: nil)
-//                    self.joinButton.isEnabled = false
                     callback()
                 }
             }

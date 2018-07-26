@@ -15,4 +15,5 @@ struct Config {
     static let username = "username"
     static let channel = "channelId"
     static let channelName = "channelName"
+    static let sound = "notificationSound"
 }
