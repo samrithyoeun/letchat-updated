@@ -85,11 +85,13 @@ class ChatViewController: UIViewController {
     }
     
     @objc func keyboardWillAppear() {
-        //Do something here
+        inputImageName = "lol"
+        inputButton.setImage(UIImage(named: inputImageName), for: .normal)
     }
     
     @objc func keyboardWillDisappear() {
-        //Do something here
+        inputImageName = "keyboard-white"
+        inputButton.setImage(UIImage(named: inputImageName), for: .normal)
     }
    
     @IBAction func likeButtonTapped(_ sender: Any) {
@@ -117,6 +119,7 @@ class ChatViewController: UIViewController {
         } else {
             inputImageName = "keyboard-white"
             stickerViewHeight.constant = 60
+            messageTextField.resignFirstResponder()
         }
         
         inputButton.setImage(UIImage(named: inputImageName), for: .normal)
