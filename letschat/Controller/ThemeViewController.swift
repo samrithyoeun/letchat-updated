@@ -56,9 +56,10 @@ class ThemeViewController: UITableViewController {
     }
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
+        debug("button tapped")
         ThemeManager.shared.setTheme(Theme(rawValue: selectedIndex)!)
         ThemeManager.shared.setThemeName((themeLabelGroup[selectedIndex]?.text)!)
-        navigationController?.popViewController(animated: true)
+        navigationController!.popViewController(animated: true)
     }
     
     private func setCheckBox(index: Int) {

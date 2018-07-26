@@ -22,7 +22,9 @@ struct Message {
         let content = message["content"].stringValue
         let username = message["username"].stringValue
         let time = message["createdAt"].stringValue
-        let newMessage = Message(username: username, time: time, content: content, type: "")
+        let type = message["types"].stringValue
+        let newMessage = Message(username: username, time: time, content: content, type: type)
+        debug("new message")
         debug(newMessage)
         return newMessage
     }

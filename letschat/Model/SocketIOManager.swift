@@ -77,7 +77,7 @@ class SocketIOManager: NSObject {
     public func sendMessage(type: MessageType, content: String){
         let data : [String: Any] = ["userId": User.getUserId(),
                                     "content": content,
-                                    "type": type.rawValue
+                                    "types": type.rawValue
                                     ]
         
         debug("message Value")

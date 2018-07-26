@@ -14,4 +14,5 @@ struct Config {
     static let user = "userId"
     static let username = "username"
     static let channel = "channelId"
+    static let channelName = "channelName"
 }

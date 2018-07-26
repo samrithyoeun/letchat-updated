@@ -7,10 +7,11 @@
 //
 
 import UIKit
-import SocketIO
+import SwiftyJSON
 
 class ChatViewController: UIViewController {
-
+    
+    @IBOutlet weak var stickerViewHeight: NSLayoutConstraint!
     @IBOutlet weak var letchatLabel: UILabel!
     @IBOutlet weak var settingButton: UIButton!
     @IBOutlet weak var lineView: UIView!
@@ -37,21 +38,22 @@ class ChatViewController: UIViewController {
     
     var conversations = [Message]()
     var message = Message()
+    var selectedKeyboard = true
+    var inputImageName = "lol"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         chatTableView.delegate = self
         chatTableView.dataSource = self
         messageTextField.delegate = self
-        
+        stickerViewHeight.constant = 0
         updateTableContentInset(forTableView: chatTableView)
-        
         SocketIOManager.shared.setupSocket()
         SocketIOManager.shared.handleNewMessage { (data) in
             
             self.message = Message.jsonMapping(data)
             if self.message.username == User.getUsername() {
-                // just a response of the sent message from sender
+                debug("message successfully sent")
             } else {
                 self.conversations.append(self.message)
                 self.chatTableView.reloadData()
@@ -59,7 +61,10 @@ class ChatViewController: UIViewController {
             }
         }
         SocketIOManager.shared.handleOnlineUser { (any) in
-            print(any)
+            let count = (any[0] as AnyObject).integerValue
+            self.onlineLabel.text = "Online: \(count!)"
+            self.channelLabel.text = Channel.getChannelName()
+            debug(Channel.getChannelName())
         }
         
     }
@@ -69,28 +74,75 @@ class ChatViewController: UIViewController {
         let theme = ThemeManager.shared.getTheme()
         changeThemeTo(theme)
         chatTableView.reloadData()
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: Notification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: Notification.Name.UIKeyboardWillShow, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func keyboardWillAppear() {
+        //Do something here
+    }
+    
+    @objc func keyboardWillDisappear() {
+        //Do something here
+    }
+   
+    @IBAction func likeButtonTapped(_ sender: Any) {
+        sendSticker("like")
+    }
+    
+    @IBAction func supriseButtonTapped(_ sender: Any) {
+        sendSticker("surprise")
+    }
+    
+    @IBAction func cryButtonTapped(_ sender: Any) {
+        sendSticker("cry")
+    }
+    
+    @IBAction func lolButtonTapped(_ sender: Any) {
+        sendSticker("lol")
     }
     
     @IBAction func keyboardButtonTapped(_ sender: Any) {
-
+        if inputImageName == "keyboard-white" {
+            inputImageName = "lol"
+            stickerViewHeight.constant = 0
+            messageTextField.becomeFirstResponder()
+           
+        } else {
+            inputImageName = "keyboard-white"
+            stickerViewHeight.constant = 60
+        }
+        
+        inputButton.setImage(UIImage(named: inputImageName), for: .normal)
     }
     
     @IBAction func sendButtonTapped(_ sender: Any) {
-        message.username = "sender"
+        message.username = User.getUsername()
         message.time = Date.getCurrentTime()
-        message.content = messageTextField.text ?? ""
+        message.content = messageTextField.text ?? "some error text"
+        message.type = MessageType.message.rawValue
         SocketIOManager.shared.sendMessage(type: MessageType.message, content: message.content)
         conversations.append(message)
         chatTableView.reloadData()
         scrollToBottom()
     }
-
     
-    private func setDummyData(){
-        conversations.append(Message(username: "Sam", time: "12:00pm", content: "Hello there what is the 1 ?", type: "message"))
-        conversations.append(Message(username: "Sam", time: "12:00pm", content: "Hello there what is the 2 ?", type: "message"))
-        conversations.append(Message(username: "Sam", time: "12:00pm", content: "Hello there what is the 3 ?", type: "message"))
-    
+    private func sendSticker(_ sticker: String){
+        debug("\(sticker) button tapped")
+        message.username = User.getUsername()
+        message.time = Date.getCurrentTime()
+        message.type = MessageType.sticker.rawValue
+        message.content = sticker
+        SocketIOManager.shared.sendMessage(type: MessageType.sticker, content: message.content)
+        conversations.append(message)
+        chatTableView.reloadData()
+        scrollToBottom()
     }
     
     private func updateTableContentInset(forTableView tv: UITableView) {
@@ -116,7 +168,7 @@ class ChatViewController: UIViewController {
         }
         tv.contentInset = UIEdgeInsetsMake(contentInsetTop, 0, 0, 0)
     }
-
+    
 }
 
 extension ChatViewController: UITableViewDelegate {
@@ -142,13 +194,15 @@ extension ChatViewController: UITableViewDataSource {
         let message = conversations[indexPath.row]
         var cell: TemplateTableViewCell
         if message.type == "sticker" {
-            if message.username == "sender" {
+            if message.username == User.getUsername() {
+                debug("sicker cell")
                 cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingImage") as! OutGoingImageTableViewCell
             }else {
+                debug("sicker cell")
                 cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingImage") as! InComingImageTableViewCell
             }
         } else {
-            if message.username == "sender" {
+            if message.username == User.getUsername() {
                 cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingMessage") as! OutGoingMessageTableViewCell
             }else {
                 cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingMessage") as! InComingMessageTableViewCell
@@ -167,24 +221,27 @@ extension ChatViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         messageTextField.resignFirstResponder()
         view.endEditing(true)
+        selectedKeyboard = false
         return true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("start editing")
+        selectedKeyboard = true
+        pushView(-250)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        pushView(250)
+        selectedKeyboard = false
+    }
+    
+    func pushView(_ constant : CGFloat){
         UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y - 200, width:self.view.frame.size.width, height:self.view.frame.size.height);
+            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y + constant, width:self.view.frame.size.width, height:self.view.frame.size.height);
             
         })
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print("stop editing")
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y + 200, width:self.view.frame.size.width, height:self.view.frame.size.height);
-            
-        })
-    }
 }
 
 extension ChatViewController: ThemeManagerProtocol{

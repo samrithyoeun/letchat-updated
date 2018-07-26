@@ -29,15 +29,14 @@ class LoginViewController: UIViewController {
     
     var channels = [Channel]()
     var actionSheet: UIAlertController!
-    lazy var selectedChannelId = channels[0].id
-    
+    lazy var selectedChannel = channels[0]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         ControllerManager.shared.login = self
         changeThemeTo(Theme.black)
         
-        joinButton.isEnabled = false
+//        joinButton.isEnabled = false
         usernameTextField.delegate = self
         getChannel()
     }
@@ -53,8 +52,9 @@ class LoginViewController: UIViewController {
         for channel in channels {
             let channelAction = UIAlertAction(title: channel.getLabel(), style: .default) { (alert: UIAlertAction) in
                 self.channelButton.setTitle(channel.getLabel(), for: .normal)
-                self.selectedChannelId = channel.id
-                self.setSelectedChannel(channel.id, callback: {})
+                self.selectedChannel = channel
+                Channel.setChannelName(channel.name)
+                self.setSelectedChannel(channel, callback: {})
             }
             actionSheet.addAction(channelAction)
         }
@@ -66,19 +66,22 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func joinButtontTapped(_ sender: UIButton) {
-        self.goToChatScreen()
+        setSelectedChannel(selectedChannel) {
+            self.goToChatScreen()
+        }
     }
     
-    private func setSelectedChannel(_ id: String, callback: @escaping ()->()) {
+    private func setSelectedChannel(_ channel: Channel, callback: @escaping ()->()) {
         print("==set selected channel===")
-        let params: [String: Any] = ["username": self.usernameTextField.text ?? "", "channelId": id]
+        let params: [String: Any] = ["username": self.usernameTextField.text ?? "", "channelId": channel.id]
         APIRequest.postRequest(endPoint: "/users", headers: [:], parameters: params, callback: { (json, code, error) in
             if error == nil {
                 var user = User()
                 user.setData(json)
-                self.joinButton.isEnabled = true
+//                self.joinButton.isEnabled = true
                 Channel.setChannelId(user.channelId)
                 User.setUserId(user.id)
+                Channel.setChannelName(channel.name)
                 callback()
             } else {
                 print(error!)
@@ -87,7 +90,7 @@ class LoginViewController: UIViewController {
                     let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                     alertController.addAction(OKAction)
                     self.present(alertController, animated: true, completion: nil)
-                    self.joinButton.isEnabled = false
+//                    self.joinButton.isEnabled = false
                     callback()
                 }
             }
@@ -112,9 +115,9 @@ class LoginViewController: UIViewController {
     
     private func goToChatScreen(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let chatVC = storyboard.instantiateViewController(withIdentifier: "chatViewController") as? ChatViewController {
-            self.present(chatVC, animated: true) {
-                ControllerManager.shared.chat = chatVC
+        if let navVC = storyboard.instantiateViewController(withIdentifier: "navigationController") as? UINavigationController {
+            self.present(navVC, animated: true) {
+               
             }
         } else {
             print("cannot get the chat VC from storyboard")
@@ -154,7 +157,7 @@ extension LoginViewController: ThemeManagerProtocol {
 
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.setSelectedChannel(selectedChannelId, callback: {})
+        self.setSelectedChannel(selectedChannel, callback: {})
         usernameTextField.resignFirstResponder()
         view.endEditing(true)
         return true

@@ -42,4 +42,12 @@ struct Channel {
     public static func getChannelId()-> String{
         return UserDefaults.standard.string(forKey: Config.channel) ?? ""
     }
+    
+    public static func setChannelName(_ name: String){
+        UserDefaults.standard.set(name, forKey: Config.channelName)
+    }
+    
+    public static func getChannelName()-> String{
+        return UserDefaults.standard.string(forKey: Config.channelName) ?? ""
+    }
 }
