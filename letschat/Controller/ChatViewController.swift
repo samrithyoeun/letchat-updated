@@ -40,6 +40,7 @@ class ChatViewController: UIViewController {
     var conversations = [Message]()
     var message = Message()
     var selectedKeyboard = true
+    var fetchingMore = false
     var inputImageName = "lol"
     
     override func viewDidLoad() {
@@ -52,6 +53,9 @@ class ChatViewController: UIViewController {
         chatTableView.re.delegate = self
         chatTableView.re.scrollViewDidReachTop = { scrollView in
             debug("scrollViewDidReachTop")
+            if !self.fetchingMore {
+                self.beginBatchFetch()
+            }
         }
         
         SocketIOManager.shared.setupSocket()
@@ -151,6 +155,19 @@ class ChatViewController: UIViewController {
         }
     }
     
+    func beginBatchFetch() {
+        fetchingMore = true
+        debug("beginBatchFetch!")
+        chatTableView.reloadSections(IndexSet(integer: 1), with: .none)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
+//            let newItems = (self.conversations.count...self.conversations.count + 12).map { index in index }
+//            self.conver.append(contentsOf: newItems)
+            debug("start reload data")
+            self.fetchingMore = false
+            self.chatTableView.reloadData()
+        })
+    }
+    
     @objc private func keyboardWillAppear() {
         inputImageName = "lol"
         inputButton.setImage(UIImage(named: inputImageName), for: .normal)
@@ -176,35 +193,48 @@ extension ChatViewController: UITableViewDelegate {
 }
 
 extension ChatViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return conversations.count
+        if section == 0 {
+            return conversations.count
+        } else if section == 1 && fetchingMore {
+            return 1
+        }
+        return 0
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let message = conversations[indexPath.row]
-        var cell: TemplateTableViewCell
-        if message.type == "sticker" {
-            if message.username == User.getUsername() {
-                debug("sicker cell")
-                cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingImage") as! OutGoingImageTableViewCell
-            }else {
-                debug("sicker cell")
-                cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingImage") as! InComingImageTableViewCell
+        if indexPath.section == 0 {
+            let message = conversations[indexPath.row]
+            var cell: TemplateTableViewCell
+            if message.type == "sticker" {
+                if message.username == User.getUsername() {
+                    debug("sicker cell")
+                    cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingImage") as! OutGoingImageTableViewCell
+                }else {
+                    debug("sicker cell")
+                    cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingImage") as! InComingImageTableViewCell
+                }
+            } else {
+                if message.username == User.getUsername() {
+                    cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingMessage") as! OutGoingMessageTableViewCell
+                }else {
+                    cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingMessage") as! InComingMessageTableViewCell
+                }
             }
+            cell.bindDataFrom(message)
+            return cell
         } else {
-            if message.username == User.getUsername() {
-                cell = chatTableView.dequeueReusableCell(withIdentifier: "outGoingMessage") as! OutGoingMessageTableViewCell
-            }else {
-                cell = chatTableView.dequeueReusableCell(withIdentifier: "incomingMessage") as! InComingMessageTableViewCell
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "indicatorCell", for: indexPath) as! IndicatorTableViewCell
+            cell.startSpinning()
+            return cell
         }
-        cell.bindDataFrom(message)
-        return cell
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        
     }
 }
 

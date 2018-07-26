@@ -42,6 +42,7 @@
 		822B5398ADDD7A37D44B5908 /* Pods_letschat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27696727D58542F0D29B1377 /* Pods_letschat.framework */; };
 		CD2AD4C32109CF9D005F960A /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2AD4C22109CF9D005F960A /* SoundPlayer.swift */; };
 		CD2AD4C52109D0A4005F960A /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2AD4C42109D0A4005F960A /* beep.mp3 */; };
+		CD2AD4C82109E442005F960A /* IndicatorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2AD4C72109E442005F960A /* IndicatorTableViewCell.swift */; };
 		CD6C33D0210899C100E22718 /* SocketIOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C33CF210899C100E22718 /* SocketIOManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +88,7 @@
 		BBD166F982F0C945521B3DD1 /* Pods-letschat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-letschat.release.xcconfig"; path = "Pods/Target Support Files/Pods-letschat/Pods-letschat.release.xcconfig"; sourceTree = "<group>"; };
 		CD2AD4C22109CF9D005F960A /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
 		CD2AD4C42109D0A4005F960A /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
+		CD2AD4C72109E442005F960A /* IndicatorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorTableViewCell.swift; sourceTree = "<group>"; };
 		CD6C33CF210899C100E22718 /* SocketIOManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIOManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -239,6 +241,7 @@
 				5367CD4F2108371800310C6C /* InComingMessageTableViewCell.swift */,
 				5367CD502108371800310C6C /* OutGoingImageTableViewCell.swift */,
 				5367CD512108371800310C6C /* OutGoingMessageTableViewCell.swift */,
+				CD2AD4C72109E442005F960A /* IndicatorTableViewCell.swift */,
 				5367CD522108371800310C6C /* TemplateTableViewCell.swift */,
 			);
 			path = ChatTableViewCell;
@@ -440,6 +443,7 @@
 				5367CD472108370E00310C6C /* ThemeManager.swift in Sources */,
 				5367CD18210836B200310C6C /* AppDelegate.swift in Sources */,
 				532A32C72108481D004945ED /* APIRequest.swift in Sources */,
+				CD2AD4C82109E442005F960A /* IndicatorTableViewCell.swift in Sources */,
 				CD2AD4C32109CF9D005F960A /* SoundPlayer.swift in Sources */,
 				5367CD602108372000310C6C /* SettingViewController.swift in Sources */,
 				532A32CC2108553B004945ED /* Helper.swift in Sources */,

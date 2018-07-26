@@ -228,6 +228,31 @@
                                             <outlet property="userInfoLabel" destination="rvy-5J-4AF" id="KgJ-24-wxF"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="indicatorCell" rowHeight="63" id="waJ-ED-aAm" customClass="IndicatorTableViewCell" customModule="letschat" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="280" width="320" height="63"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="waJ-ED-aAm" id="GzT-b3-CTj">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="vLp-FP-CHt">
+                                                    <rect key="frame" x="150" y="21" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="20" id="cDM-Gb-BW9"/>
+                                                        <constraint firstAttribute="height" constant="20" id="kf7-aR-X4f"/>
+                                                    </constraints>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="vLp-FP-CHt" firstAttribute="centerX" secondItem="GzT-b3-CTj" secondAttribute="centerX" id="rGI-Vz-Oez"/>
+                                                <constraint firstItem="vLp-FP-CHt" firstAttribute="centerY" secondItem="GzT-b3-CTj" secondAttribute="centerY" id="yRq-Ym-kqL"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="spinner" destination="vLp-FP-CHt" id="dje-rB-cVO"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="st2-0V-XdD" userLabel="inputView">

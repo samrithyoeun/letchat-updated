@@ -14,6 +14,7 @@ class TemplateTableViewCell: UITableViewCell {
     var stickerImageView: UIImageView?
     var messagesLabel: UILabel?
     var contentsView: UIView?
+    var spinners: UIActivityIndicatorView?
     
     public func setMessage(_ message: Message){
         userLabel?.text = message.username + " - " + message.time
@@ -39,6 +40,7 @@ extension TemplateTableViewCell: ThemeManagerProtocol {
             stickerImageView?.tintColor = secondColor
             contentsView?.backgroundColor = firstColor
             messagesLabel?.textColor = secondColor
+            spinners?.tintColor = secondColor
             
         }
     }
