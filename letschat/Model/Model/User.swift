@@ -20,10 +20,10 @@ struct User {
         id = json["_id"].stringValue
         channelId = json["channelId"].stringValue
         print(self)
-        UserDefaults.standard.set(id, forKey: Config.user)
+        User.setUserId(id)
     }
     
-    public static func getUserId() -> String{
+    public static func getUserId() -> String {
         return UserDefaults.standard.string(forKey: Config.user) ?? ""
     }
     

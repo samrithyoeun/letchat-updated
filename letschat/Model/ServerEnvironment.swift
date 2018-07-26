@@ -12,9 +12,11 @@ struct ServerEnvironment {
     static let localIp = "http://192.168.168.168:8080"
     static let host = "https://fierce-wildwood-40527.herokuapp.com/api/v1"
     static let chatRoom = "https://fierce-wildwood-40527.herokuapp.com/chatroom"
+    static let socket = "https://fierce-wildwood-40527.herokuapp.com"
     #else
     static let localIp = "http://pathmazing.com"
     static let host = "https://fierce-wildwood-40527.herokuapp.com/api/v1"
     static let chatRoom = "https://fierce-wildwood-40527.herokuapp.com/chatroom"
+    static let socket = "https://fierce-wildwood-40527.herokuapp.com"
     #endif
 }

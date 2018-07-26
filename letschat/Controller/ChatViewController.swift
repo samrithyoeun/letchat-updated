@@ -35,11 +35,13 @@ class ChatViewController: UIViewController {
     lazy var buttonGroup = [settingButton, inputButton, sendButton, sadFaceButton, supriseFaceButton, likeButton, smileButton]
     lazy var viewGroup = [chatTableView, view, stickerView, inputsView, headerView]
     
+    let manager = SocketManager(socketURL: URL(string: ServerEnvironment.socket)!, config: [.log(true), .compress])
+    lazy var socket = manager.socket(forNamespace: "/chatroom")
+    
     var conversations = [Message]()
     var testSendingMessage  = 1
     
-    let manager = SocketManager(socketURL: URL(string: ServerEnvironment.chatRoom)!, config: [.log(true), .compress])
-    lazy var socket = manager.defaultSocket
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,39 +50,59 @@ class ChatViewController: UIViewController {
         
         messageTextField.delegate = self
         updateTableContentInset(forTableView: chatTableView)
-        setupSocket()
+        
+       setupSocket()
     }
     
     public func setupSocket(){
+
+      
         socket.connect()
-        
-        let socketConnectionStatus = socket.status
-        
-        switch socketConnectionStatus {
-        case SocketIOStatus.connected:
-            debug("socket connected")
-        case SocketIOStatus.connecting:
-            debug("socket connecting")
-        case SocketIOStatus.disconnected:
-            debug("socket disconnected")
-        case SocketIOStatus.notConnected:
-            debug("socket not connected")
-        }
-        
-        socket.connect()
+
         socket.on(clientEvent: .connect) {data, ack in
             debug("socket connected")
+            self.socket.emit("join", User.getUserId())
+            
+            let data : [String: Any] = ["userId": User.getUserId(),
+                                        "content": "some message"
+            ]
+            
+            self.socket.emit("newMessage", data)
+            self.retereiveOldMessage()
         }
-    
-        socket.emit("join", User.getUserId())
-        socket.on("join") { (any, emit) in
+
+        socket.on(clientEvent: .error) {data, ack in
+            debug("socket error")
+        }
+        
+        socket.on(clientEvent: .disconnect) {data, ack in
+            debug("socket disconnect")
+        }
+        
+        socket.on(clientEvent: .statusChange) {data, ack in
+            debug("socket status change")
+        }
+        
+        socket.on(clientEvent: .ping) {data, ack in
+            debug("socket status change")
+        }
+        
+        socket.on("addMessage") { (any, ack) in
             debug(any)
-            debug(emit)
+            debug(ack)
         }
-        socket.on(clientEvent: .error) { (error, emit) in
-            debug(error)
-            debug(emit)
+        
+        socket.on("count") { (any, ack) in
+
+            debug(any)
+            debug(ack)
         }
+        
+        
+        
+     
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,18 +127,18 @@ class ChatViewController: UIViewController {
     }
     
     private func sendMessage(_ message: Message){
-        
-        let data = ["userId": User.getUserId(),
-                    "content": message.content
-                    ]
-        if let theJSONData = try?  JSONSerialization.data(withJSONObject: data, options: .prettyPrinted),
-            let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
-                print("JSON string = \n\(theJSONText)")
-            
-            socket.emit("newMessage", theJSONText)
-        }
-        
-        
+
+//        let data = ["userId": User.getUserId(),
+//                    "content": message.content
+//                    ]
+//        if let theJSONData = try?  JSONSerialization.data(withJSONObject: data, options: .prettyPrinted),
+//            let theJSONText = String(data: theJSONData, encoding: String.Encoding.ascii) {
+//                print("JSON string = \n\(theJSONText)")
+//
+//            socket.emit("newMessage", theJSONText)
+//        }
+
+    
     }
     
     private func setDummyData(){
@@ -127,7 +149,7 @@ class ChatViewController: UIViewController {
     }
     
     private func retereiveOldMessage(){
-        let limit = 10
+        let limit = 20
         let channelId = Channel.getChannelId()
         let endpoint = "/channels/\(channelId)/messages?limit=\(limit)"
         APIRequest.get(endPoint: endpoint){ (json, code, error) in
