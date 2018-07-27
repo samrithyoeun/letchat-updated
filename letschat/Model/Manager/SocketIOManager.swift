@@ -17,7 +17,6 @@ class SocketIOManager: NSObject {
     let manager = SocketManager(socketURL: URL(string: ServerEnvironment.socket)!, config: [.log(true), .compress])
     lazy var socket = manager.socket(forNamespace: "/chatroom")
     
-    
     public func setupSocket(){
         socket.connect()
         joinChatGroup()
@@ -25,15 +24,6 @@ class SocketIOManager: NSObject {
             debug("error in socket")
             debug(error)
             debug(ack)
-        }
-        
-        socket.on(clientEvent: .disconnect) {status, ack in
-            debug("socket disconnect")
-            debug(status)
-            debug(ack)
-            if let loginScreenVC = ControllerManager.shared.login, let chatVC = ControllerManager.shared.chat{
-             
-            }
         }
         
         socket.on(clientEvent: .statusChange) {status, ack in
@@ -48,7 +38,15 @@ class SocketIOManager: NSObject {
             debug(ack)
         }
         
-       
+    }
+    
+    public func handleDisconnect(callback: @escaping ()->() ){
+        socket.on(clientEvent: .disconnect) { (any, ack) in
+            debug("disconnect")
+            debug(any)
+            debug(ack)
+            callback()
+        }
     }
     
     public func handleNewMessage(callback: @escaping (Data)->() ){

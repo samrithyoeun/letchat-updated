@@ -39,6 +39,7 @@
 		5367CD5F2108372000310C6C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5367CD5B2108372000310C6C /* LoginViewController.swift */; };
 		5367CD602108372000310C6C /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5367CD5C2108372000310C6C /* SettingViewController.swift */; };
 		5367CD612108372000310C6C /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5367CD5D2108372000310C6C /* ThemeViewController.swift */; };
+		53B0E417210ADA9A0050A1D8 /* MessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B0E416210ADA9A0050A1D8 /* MessageType.swift */; };
 		822B5398ADDD7A37D44B5908 /* Pods_letschat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27696727D58542F0D29B1377 /* Pods_letschat.framework */; };
 		CD2AD4C32109CF9D005F960A /* SoundPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2AD4C22109CF9D005F960A /* SoundPlayerManager.swift */; };
 		CD2AD4C52109D0A4005F960A /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CD2AD4C42109D0A4005F960A /* beep.mp3 */; };
@@ -85,6 +86,7 @@
 		5367CD5B2108372000310C6C /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		5367CD5C2108372000310C6C /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		5367CD5D2108372000310C6C /* ThemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
+		53B0E416210ADA9A0050A1D8 /* MessageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageType.swift; sourceTree = "<group>"; };
 		BBD166F982F0C945521B3DD1 /* Pods-letschat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-letschat.release.xcconfig"; path = "Pods/Target Support Files/Pods-letschat/Pods-letschat.release.xcconfig"; sourceTree = "<group>"; };
 		CD2AD4C22109CF9D005F960A /* SoundPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayerManager.swift; sourceTree = "<group>"; };
 		CD2AD4C42109D0A4005F960A /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 		5367CD2B2108370100310C6C /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				5367CD3B2108370E00310C6C /* Config.swift */,
 				532A32C92108553A004945ED /* Helper */,
 				5367CD2C2108370100310C6C /* Extension */,
 				5367CD2F2108370100310C6C /* Font */,
@@ -191,7 +194,6 @@
 				5367CD3E2108370E00310C6C /* Manager */,
 				5367CD412108370E00310C6C /* Model */,
 				532A32BF2108469E004945ED /* ServerEnvironment.swift */,
-				5367CD3B2108370E00310C6C /* Config.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -218,9 +220,8 @@
 		5367CD412108370E00310C6C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5367CD422108370E00310C6C /* Channel.swift */,
-				532A32CE210858E9004945ED /* User.swift */,
-				5367CD432108370E00310C6C /* Message.swift */,
+				53B0E418210ADAD60050A1D8 /* Enum */,
+				53B0E419210ADAE30050A1D8 /* Entity */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -270,6 +271,24 @@
 				532A32BE2108467F004945ED /* ProdConfig.xcconfig */,
 			);
 			path = SupportingFile;
+			sourceTree = "<group>";
+		};
+		53B0E418210ADAD60050A1D8 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				53B0E416210ADA9A0050A1D8 /* MessageType.swift */,
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
+		53B0E419210ADAE30050A1D8 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				5367CD422108370E00310C6C /* Channel.swift */,
+				532A32CE210858E9004945ED /* User.swift */,
+				5367CD432108370E00310C6C /* Message.swift */,
+			);
+			path = Entity;
 			sourceTree = "<group>";
 		};
 		CD2AD4C62109D0AA005F960A /* Ringtune */ = {
@@ -435,6 +454,7 @@
 				5367CD352108370100310C6C /* UITextFieldEx.swift in Sources */,
 				5367CD542108371800310C6C /* InComingImageTableViewCell.swift in Sources */,
 				5367CD612108372000310C6C /* ThemeViewController.swift in Sources */,
+				53B0E417210ADA9A0050A1D8 /* MessageType.swift in Sources */,
 				532A32C02108469E004945ED /* ServerEnvironment.swift in Sources */,
 				5367CD552108371800310C6C /* InComingMessageTableViewCell.swift in Sources */,
 				5367CD492108370E00310C6C /* Message.swift in Sources */,

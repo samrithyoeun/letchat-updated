@@ -12,6 +12,7 @@ import ReverseExtension
 
 class ChatViewController: UIViewController {
     
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var stickerViewHeight: NSLayoutConstraint!
     @IBOutlet weak var letchatLabel: UILabel!
     @IBOutlet weak var settingButton: UIButton!
@@ -35,7 +36,7 @@ class ChatViewController: UIViewController {
     
     lazy var labelGroup = [letchatLabel, channelLabel, onlineLabel]
     lazy var buttonGroup = [settingButton, inputButton, sendButton, sadFaceButton, supriseFaceButton, likeButton, smileButton]
-    lazy var viewGroup = [chatTableView, view, stickerView, inputsView, headerView]
+    lazy var viewGroup = [chatTableView, view, stickerView, inputsView, headerView, containerView]
     
     var conversations = [Message]()
     var message = Message()
@@ -43,7 +44,7 @@ class ChatViewController: UIViewController {
     var fetchingMore = false
     var inputImageName = "lol"
     var skipTime = 0
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         ControllerManager.shared.chat = self
@@ -78,6 +79,12 @@ class ChatViewController: UIViewController {
             debug(Channel.getChannelName())
         }
         
+        SocketIOManager.shared.handleDisconnect {
+            alert(message: "Unstabble Connection !")
+            self.dismiss(animated: true, completion: {
+                debug("handle .disconnect by going back to lockscreen")
+            })
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -129,19 +136,22 @@ class ChatViewController: UIViewController {
             stickerViewHeight.constant = 60
             messageTextField.resignFirstResponder()
         }
-        
         inputButton.setImage(UIImage(named: inputImageName), for: .normal)
     }
     
     @IBAction func sendButtonTapped(_ sender: Any) {
-        message.username = User.getUsername()
-        message.time = Date.getCurrentTime()
-        message.content = messageTextField.text ?? "some error text"
-        message.type = MessageType.message.rawValue
-        SocketIOManager.shared.sendMessage(type: MessageType.message, content: message.content)
-        conversations.insert(message, at: 0)
-        chatTableView.reloadData()
-        scrollToBottom()
+        if messageTextField.text != "" {
+            message.username = User.getUsername()
+            message.time = Date.getCurrentTime()
+            message.content = messageTextField.text ?? "some error text"
+            message.type = MessageType.message.rawValue
+            SocketIOManager.shared.sendMessage(type: MessageType.message, content: message.content)
+            conversations.insert(message, at: 0)
+            chatTableView.reloadData()
+            scrollToBottom()
+            messageTextField.text = ""
+            messageTextField.resignFirstResponder()
+        }
     }
     
     public func gotoLockScreen(){
@@ -165,7 +175,7 @@ class ChatViewController: UIViewController {
             switch result {
             case .success(let oldMessages):
                 for message in oldMessages {
-                    self.conversations.append(message)
+                    self.conversations.insert(message, at: 0)
                 }
                 self.chatTableView.reloadData()
             case .failure(let error):
@@ -182,7 +192,7 @@ class ChatViewController: UIViewController {
         debug("sound \(setting)")
     }
     
-    func beginBatchFetch() {
+    private func beginBatchFetch() {
         fetchingMore = true
         skipTime += 1
         debug("beginBatchFetch! \(skipTime)")
@@ -190,7 +200,8 @@ class ChatViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8, execute: {
             SocketIOManager.shared.retereiveOldMessage(limit: self.conversations.count+10, skip: self.conversations.count, callback: { (result) in
                 switch result {
-                case .success(let oldMessages):
+                case .success(var oldMessages):
+                    oldMessages.reverse()
                     for message in oldMessages {
                         self.conversations.append(message)
                     }
@@ -219,15 +230,30 @@ class ChatViewController: UIViewController {
 }
 
 extension ChatViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 65
-    }
-    
+ 
     func scrollToBottom(){
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: 0, section: 0)
             self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if(scrollView.panGestureRecognizer.translation(in: scrollView.superview).y > 0) {
+            debug("up")
+            messageTextField.resignFirstResponder()
+        } else {
+            debug("down")
+            messageTextField.resignFirstResponder()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
 }
 
@@ -281,7 +307,6 @@ extension ChatViewController: UITextFieldDelegate {
         messageTextField.resignFirstResponder()
         view.endEditing(true)
         selectedKeyboard = false
-        sendButton.sendActions(for: .touchUpInside)
         return true
     }
     
@@ -298,6 +323,7 @@ extension ChatViewController: UITextFieldDelegate {
     func pushView(_ constant : CGFloat){
         UIView.animate(withDuration: 0.3, animations: {
             self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y + constant, width:self.view.frame.size.width, height:self.view.frame.size.height);
+            
         })
     }
 }

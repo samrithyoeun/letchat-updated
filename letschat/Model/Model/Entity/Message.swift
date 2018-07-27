@@ -57,8 +57,3 @@ struct Message {
         
     }
 }
-
-enum MessageType: String {
-    case sticker = "sticker"
-    case message = "message"
-}

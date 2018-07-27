@@ -42,8 +42,14 @@ class LoginViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        checkConnection()
         let theme = ThemeManager.shared.getTheme()
         changeThemeTo(theme)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+        usernameTextField.resignFirstResponder()
     }
     
     @IBAction func channelButtonTapped(_ sender: UIButton) {
@@ -65,8 +71,13 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func joinButtontTapped(_ sender: UIButton) {
-        setSelectedChannel(selectedChannel) {
-            self.goToChatScreen()
+        if channels.count == 0 {
+            alert(message: "we are fetching the channel please wait", title: "Attention")
+        } else {
+            setSelectedChannel(selectedChannel) {
+                self.goToChatScreen()
+            }
+            
         }
     }
     
@@ -112,7 +123,7 @@ class LoginViewController: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let navVC = storyboard.instantiateViewController(withIdentifier: "navigationController") as? UINavigationController {
             self.present(navVC, animated: true) {
-               
+                
             }
         } else {
             print("cannot get the chat VC from storyboard")
@@ -155,21 +166,5 @@ extension LoginViewController: UITextFieldDelegate {
         usernameTextField.resignFirstResponder()
         view.endEditing(true)
         return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("start editing")
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y - 100, width:self.view.frame.size.width, height:self.view.frame.size.height);
-            
-        })
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print("stop editing")
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y + 100, width:self.view.frame.size.width, height:self.view.frame.size.height);
-            
-        })
     }
 }
