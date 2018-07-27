@@ -54,13 +54,13 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="JzI-DR-zLx">
                                         <rect key="frame" x="0.0" y="84.5" width="320" height="39"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#ChitChat" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uvI-Q6-pmf">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#Channel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uvI-Q6-pmf">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="19.5"/>
                                                 <fontDescription key="fontDescription" name="Mina-Regular" family="Mina" pointSize="12"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Online Now 6" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="de3-JD-DTZ">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Online" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="de3-JD-DTZ">
                                                 <rect key="frame" x="0.0" y="19.5" width="320" height="19.5"/>
                                                 <fontDescription key="fontDescription" name="Mina-Regular" family="Mina" pointSize="12"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -235,12 +235,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="63"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="vLp-FP-CHt">
-                                                    <rect key="frame" x="150" y="21" width="20" height="20"/>
+                                                <activityIndicatorView contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="vLp-FP-CHt">
+                                                    <rect key="frame" x="150.5" y="21.5" width="20" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="20" id="cDM-Gb-BW9"/>
                                                         <constraint firstAttribute="height" constant="20" id="kf7-aR-X4f"/>
                                                     </constraints>
+                                                    <color key="color" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 </activityIndicatorView>
                                             </subviews>
                                             <constraints>
@@ -573,6 +574,7 @@
                                                     </state>
                                                     <connections>
                                                         <action selector="leaveGroupButtonTapped:" destination="QPE-xw-erZ" eventType="touchUpInside" id="3eS-ni-l8Q"/>
+                                                        <segue destination="mRx-VU-UV8" kind="presentation" id="h6j-wr-nRy"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -600,6 +602,8 @@
                         <outlet property="ThemeLabel" destination="yhK-1x-cgP" id="wfA-gA-7xV"/>
                         <outlet property="closeButton" destination="DPi-em-tEw" id="JAK-mf-dXM"/>
                         <outlet property="headerView" destination="OnQ-Ee-U7h" id="cCo-oI-8lj"/>
+                        <outlet property="leaveGroupButton" destination="guO-sJ-TA3" id="49b-Ij-LyJ"/>
+                        <outlet property="leaveView" destination="LmU-Lh-bIx" id="lXn-fj-8zs"/>
                         <outlet property="lineView" destination="jGe-nh-cQF" id="HDO-ZU-rK0"/>
                         <outlet property="settingMenuLabel" destination="ocq-nW-ApN" id="S48-xY-1aM"/>
                         <outlet property="soundButton" destination="4S7-wq-sDH" id="SQu-sS-LRH"/>
@@ -936,7 +940,7 @@
         <!--Login View Controller-->
         <scene sceneID="ETh-zg-2D3">
             <objects>
-                <viewController id="mRx-VU-UV8" customClass="LoginViewController" customModule="letschat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="lockScreenVC" id="mRx-VU-UV8" customClass="LoginViewController" customModule="letschat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lJA-UH-XDi">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -981,7 +985,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="woa-fg-z0n">
                                         <rect key="frame" x="36" y="269" width="248" height="34"/>
                                         <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Hello" placeholder="some test" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q8d-jP-a2I">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="SamYoeun" placeholder="some test" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q8d-jP-a2I">
                                                 <rect key="frame" x="0.0" y="0.0" width="248" height="32"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" name="Mina-Regular" family="Mina" pointSize="20"/>

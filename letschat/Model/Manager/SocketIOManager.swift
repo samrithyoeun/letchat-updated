@@ -31,6 +31,9 @@ class SocketIOManager: NSObject {
             debug("socket disconnect")
             debug(status)
             debug(ack)
+            if let loginScreenVC = ControllerManager.shared.login, let chatVC = ControllerManager.shared.chat{
+             
+            }
         }
         
         socket.on(clientEvent: .statusChange) {status, ack in

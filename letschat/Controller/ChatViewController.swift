@@ -46,38 +46,35 @@ class ChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ControllerManager.shared.chat = self
         chatTableView.delegate = self
         chatTableView.dataSource = self
         messageTextField.delegate = self
         stickerViewHeight.constant = 0
-        
         chatTableView.re.delegate = self
-        chatTableView.re.scrollViewDidReachTop = {
-            scrollView in
-            debug("scrollview reach top")
-            if !self.fetchingMore {
-                self.beginBatchFetch()
-                
-            }
-        }
+        
+        getOldData()
         
         SocketIOManager.shared.setupSocket()
         SocketIOManager.shared.handleNewMessage { (data) in
             
             self.message = Message.jsonMapping(data)
             if self.message.username == User.getUsername() {
-                debug("message successfully sent")
+                debug("sent message : \(self.message)")
+              
             } else {
+                
                 self.conversations.insert(self.message, at: 0)
                 self.chatTableView.reloadData()
                 self.scrollToBottom()
                 self.handleBeepSound()
             }
         }
+        
         SocketIOManager.shared.handleOnlineUser { (any) in
             let count = (any[0] as AnyObject).integerValue
-            self.onlineLabel.text = "Online: \(count!)"
-            self.channelLabel.text = Channel.getChannelName()
+            self.onlineLabel.text = "Online Users: \(count!)"
+            self.channelLabel.text = "#\(Channel.getChannelName())"
             debug(Channel.getChannelName())
         }
         
@@ -88,6 +85,14 @@ class ChatViewController: UIViewController {
         let theme = ThemeManager.shared.getTheme()
         changeThemeTo(theme)
         chatTableView.reloadData()
+        chatTableView.re.scrollViewDidReachTop = {
+            scrollView in
+            debug("scrollview reach top")
+            if !self.fetchingMore {
+                self.beginBatchFetch()
+                
+            }
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: Notification.Name.UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: Notification.Name.UIKeyboardWillShow, object: nil)
@@ -139,6 +144,10 @@ class ChatViewController: UIViewController {
         scrollToBottom()
     }
     
+    public func gotoLockScreen(){
+        self.present(ControllerManager.shared.login!, animated: true) {}
+    }
+    
     private func sendSticker(_ sticker: String){
         debug("\(sticker) button tapped")
         message.username = User.getUsername()
@@ -149,6 +158,20 @@ class ChatViewController: UIViewController {
         conversations.insert(message, at: 0)
         chatTableView.reloadData()
         scrollToBottom()
+    }
+    
+    private func getOldData(){
+        SocketIOManager.shared.retereiveOldMessage(limit: self.conversations.count+10, skip: self.conversations.count, callback: { (result) in
+            switch result {
+            case .success(let oldMessages):
+                for message in oldMessages {
+                    self.conversations.append(message)
+                }
+                self.chatTableView.reloadData()
+            case .failure(let error):
+                debug(error)
+            }
+        })
     }
     
     private func handleBeepSound(){
@@ -213,7 +236,6 @@ extension ChatViewController: UITableViewDataSource {
         return 2
     }
     
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return conversations.count
@@ -259,6 +281,7 @@ extension ChatViewController: UITextFieldDelegate {
         messageTextField.resignFirstResponder()
         view.endEditing(true)
         selectedKeyboard = false
+        sendButton.sendActions(for: .touchUpInside)
         return true
     }
     

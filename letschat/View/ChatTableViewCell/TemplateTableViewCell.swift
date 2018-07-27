@@ -40,8 +40,7 @@ extension TemplateTableViewCell: ThemeManagerProtocol {
             stickerImageView?.tintColor = secondColor
             contentsView?.backgroundColor = firstColor
             messagesLabel?.textColor = secondColor
-            spinners?.tintColor = secondColor
-            
+            spinners?.color = secondColor
         }
     }
     

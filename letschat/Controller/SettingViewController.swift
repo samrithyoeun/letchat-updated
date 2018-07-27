@@ -19,16 +19,17 @@ class SettingViewController: UITableViewController {
     @IBOutlet weak var lineView: UIView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var themeSelectedLabel: UILabel!
-    
+    @IBOutlet weak var leaveGroupButton: UIButton!
+    @IBOutlet weak var leaveView: UIView!
     @IBOutlet weak var themeCellView: UIView!
     @IBOutlet weak var soundCellView: UIView!
     @IBOutlet weak var themeLabel: UILabel!
     
     var soundButtonTrigger = true
     
-    lazy var buttonGroup = [soundButton, closeButton]
+    lazy var buttonGroup = [soundButton, closeButton, leaveGroupButton]
     lazy var labelGroup = [themeLabel, settingMenuLabel, soundLabel, themeLabel, themeSelectedLabel]
-    lazy var viewGroup = [themeCellView, soundCellView, view, headerView]
+    lazy var viewGroup = [themeCellView, soundCellView, view, headerView, leaveView]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +68,7 @@ class SettingViewController: UITableViewController {
     
     @IBAction func leaveGroupButtonTapped(_ sender: UIButton) {
         SocketIOManager.shared.leaveGroup()
+        debug("leaveGroup")
     }
     
     private func refreshUI(){

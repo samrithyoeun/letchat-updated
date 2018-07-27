@@ -12,14 +12,11 @@ class IndicatorTableViewCell: TemplateTableViewCell {
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     public func startSpinning(){
-        super.spinners = spinner
+        super.spinners = self.spinner
+        spinner.startAnimating()
         super.contentsView = self.contentView
         super.handleThemeChange()
-        super.spinners?.startAnimating()
-    }
-    
-    public func stopAnimating(){
-        super.spinners?.stopAnimating()
+        
     }
     
     override func bindDataFrom(_ message: Message) {

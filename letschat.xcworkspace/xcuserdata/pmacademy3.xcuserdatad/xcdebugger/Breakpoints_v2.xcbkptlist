@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "letschat/Controller/LoginViewController.swift"
-            timestampString = "554289069.13437"
+            timestampString = "554355978.967291"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
-            landmarkName = "LoginViewController"
-            landmarkType = "21">
+            startingLineNumber = "155"
+            endingLineNumber = "155"
+            landmarkName = "textFieldShouldReturn(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

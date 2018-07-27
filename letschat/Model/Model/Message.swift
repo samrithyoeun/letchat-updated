@@ -21,7 +21,8 @@ struct Message {
         let message = array[0]
         let content = message["content"].stringValue
         let username = message["username"].stringValue
-        let time = message["createdAt"].stringValue
+        var time = message["createdAt"].stringValue
+        time = Message.convertTime(time)
         let type = message["types"].stringValue
         let newMessage = Message(username: username, time: time, content: content, type: type)
         debug("new message")
@@ -35,7 +36,8 @@ struct Message {
         for message in json {
             let content = message["content"].stringValue
             let username = message["username"].stringValue
-            let time = message["createdAt"].stringValue
+            var time = message["createdAt"].stringValue
+            time = Message.convertTime(time)
             let type = message["types"].stringValue
             let newMessage = Message(username: username, time: time, content: content, type: type)
             messages.append(newMessage)
@@ -45,10 +47,14 @@ struct Message {
         return messages
     }
     
-    public func convertTime(){
-        let timeFormater = self.time
-        timeFormater.split(separator: "T", maxSplits: 4, omittingEmptySubsequences: true)
-        debug(timeFormater)
+    public static func convertTime(_ time: String) -> String{
+        let utcTime = Date.stringToDate(date: time)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        let convertedTime = formatter.string(from: utcTime)
+        debug("conver time \(convertedTime)")
+        return convertedTime
+        
     }
 }
 
