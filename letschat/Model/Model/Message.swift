@@ -45,6 +45,11 @@ struct Message {
         return messages
     }
     
+    public func convertTime(){
+        let timeFormater = self.time
+        timeFormater.split(separator: "T", maxSplits: 4, omittingEmptySubsequences: true)
+        debug(timeFormater)
+    }
 }
 
 enum MessageType: String {

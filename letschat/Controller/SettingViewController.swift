@@ -65,6 +65,10 @@ class SettingViewController: UITableViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func leaveGroupButtonTapped(_ sender: UIButton) {
+        SocketIOManager.shared.leaveGroup()
+    }
+    
     private func refreshUI(){
         let theme = ThemeManager.shared.getTheme()
         let name  = ThemeManager.shared.getThemeName()

@@ -75,6 +75,11 @@ class SocketIOManager: NSObject {
         }
     }
     
+    public func leaveGroup(){
+        socket.emit("left", User.getUserId())
+        socket.disconnect()
+    }
+    
     public func sendMessage(type: MessageType, content: String){
         let data : [String: Any] = ["userId": User.getUserId(),
                                     "content": content,
@@ -86,10 +91,10 @@ class SocketIOManager: NSObject {
         self.socket.emit("newMessage", data)
     }
     
-    public func retereiveOldMessage(limit: Int = 10, skipTime: Int = 0, callback: @escaping (Result<[Message]>) ->()) {
+    public func retereiveOldMessage(limit: Int = 10, skip: Int = 0, callback: @escaping (Result<[Message]>) ->()) {
         
         let channelId = Channel.getChannelId()
-        let endpoint = "/channels/\(channelId)/messages?limit=\(limit)"
+        let endpoint = "/channels/\(channelId)/messages?limit=\(limit)&skip=\(skip)"
         APIRequest.get(endPoint: endpoint){ (json, code, error) in
             debug("retreive old message")
             print(error ?? "")

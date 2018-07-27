@@ -424,7 +424,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wrs-J6-aaE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3108.75" y="-9.5070422535211261"/>
+            <point key="canvasLocation" x="3111" y="59"/>
         </scene>
         <!--Setting View Controller-->
         <scene sceneID="9iG-Vh-hZ7">
@@ -554,6 +554,34 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="atS-ot-9Qz" secondAttribute="trailing" constant="50" id="iQO-5s-CXl"/>
                                                 <constraint firstItem="4S7-wq-sDH" firstAttribute="centerY" secondItem="atS-ot-9Qz" secondAttribute="centerY" id="s0Y-LX-0jq"/>
                                                 <constraint firstAttribute="trailing" secondItem="4S7-wq-sDH" secondAttribute="trailing" constant="35" id="yh3-fN-jhA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="56" id="L5a-aq-e76">
+                                        <rect key="frame" x="0.0" y="200" width="320" height="56"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L5a-aq-e76" id="LmU-Lh-bIx">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="guO-sJ-TA3">
+                                                    <rect key="frame" x="36" y="0.0" width="284" height="56"/>
+                                                    <fontDescription key="fontDescription" name="Mina-Regular" family="Mina" pointSize="17"/>
+                                                    <state key="normal" title="Leave chat">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="leaveGroupButtonTapped:" destination="QPE-xw-erZ" eventType="touchUpInside" id="3eS-ni-l8Q"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="guO-sJ-TA3" firstAttribute="leading" secondItem="LmU-Lh-bIx" secondAttribute="leadingMargin" constant="20" id="Pdm-zI-yWd"/>
+                                                <constraint firstAttribute="bottom" secondItem="guO-sJ-TA3" secondAttribute="bottom" id="WGZ-Yo-Yzr"/>
+                                                <constraint firstItem="guO-sJ-TA3" firstAttribute="top" secondItem="LmU-Lh-bIx" secondAttribute="top" id="uhT-8Q-jY5"/>
+                                                <constraint firstAttribute="trailing" secondItem="guO-sJ-TA3" secondAttribute="trailing" id="v9X-nR-Bf4"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1012,7 +1040,7 @@
                                             <constraint firstAttribute="height" constant="44" id="Gdt-gj-Z3L"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Mina-Regular" family="Mina" pointSize="20"/>
-                                        <state key="normal" title="Chitchat (6)">
+                                        <state key="normal" title="Fetching chatroom ...">
                                             <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -1076,7 +1104,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qGO-0h-cvD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="690" y="-10"/>
+            <point key="canvasLocation" x="1547" y="-10"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="GIS-cE-BWi">

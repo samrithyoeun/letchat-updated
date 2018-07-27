@@ -91,9 +91,7 @@ class LoginViewController: UIViewController {
                     callback()
                 }
             }
-            
             print(code ?? "")
-            
         })
     }
     
@@ -148,7 +146,6 @@ extension LoginViewController: ThemeManagerProtocol {
             joinButton.backgroundColor = secondaryColor
             joinButton.setTitleColor(primaryColor, for: .normal)
         }
-        
     }
 }
 

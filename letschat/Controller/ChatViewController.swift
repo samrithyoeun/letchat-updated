@@ -52,9 +52,9 @@ class ChatViewController: UIViewController {
         stickerViewHeight.constant = 0
         
         chatTableView.re.delegate = self
-        chatTableView.re.scrollViewDidReachBottom = {
+        chatTableView.re.scrollViewDidReachTop = {
             scrollView in
-            debug("scrollview reach bottom")
+            debug("scrollview reach top")
             if !self.fetchingMore {
                 self.beginBatchFetch()
                 
@@ -68,7 +68,7 @@ class ChatViewController: UIViewController {
             if self.message.username == User.getUsername() {
                 debug("message successfully sent")
             } else {
-                self.conversations.append(self.message)
+                self.conversations.insert(self.message, at: 0)
                 self.chatTableView.reloadData()
                 self.scrollToBottom()
                 self.handleBeepSound()
@@ -156,15 +156,16 @@ class ChatViewController: UIViewController {
         if setting == true {
             SoundPlayer.shared.playSound()
         }
+        debug("sound \(setting)")
     }
     
     func beginBatchFetch() {
         fetchingMore = true
         skipTime += 1
-        debug("beginBatchFetch!")
+        debug("beginBatchFetch! \(skipTime)")
         chatTableView.reloadSections(IndexSet(integer: 1), with: .none)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: {
-            SocketIOManager.shared.retereiveOldMessage(limit: 10, skipTime: self.skipTime, callback: { (result) in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8, execute: {
+            SocketIOManager.shared.retereiveOldMessage(limit: self.conversations.count+10, skip: self.conversations.count, callback: { (result) in
                 switch result {
                 case .success(let oldMessages):
                     for message in oldMessages {
@@ -274,10 +275,8 @@ extension ChatViewController: UITextFieldDelegate {
     func pushView(_ constant : CGFloat){
         UIView.animate(withDuration: 0.3, animations: {
             self.view.frame = CGRect(x:self.view.frame.origin.x, y:self.view.frame.origin.y + constant, width:self.view.frame.size.width, height:self.view.frame.size.height);
-            
         })
     }
-    
 }
 
 extension ChatViewController: ThemeManagerProtocol{
