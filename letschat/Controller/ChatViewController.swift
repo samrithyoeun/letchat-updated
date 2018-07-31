@@ -146,8 +146,9 @@ class ChatViewController: UIViewController {
             message.content = messageTextField.text ?? "some error text"
             message.type = MessageType.message.rawValue
             SocketIOManager.shared.sendMessage(type: MessageType.message, content: message.content)
+            let insertIndex = IndexPath(row: conversations.count - 1, section: 1)
+            chatTableView.insertRows(at: [insertIndex], with: .bottom)
             conversations.insert(message, at: 0)
-            chatTableView.reloadData()
             scrollToBottom()
             messageTextField.text = ""
             messageTextField.resignFirstResponder()
@@ -166,7 +167,8 @@ class ChatViewController: UIViewController {
         message.content = sticker
         SocketIOManager.shared.sendMessage(type: MessageType.sticker, content: message.content)
         conversations.insert(message, at: 0)
-        chatTableView.reloadData()
+        let insertIndex = IndexPath(row: conversations.count - 1, section: 1)
+        chatTableView.insertRows(at: [insertIndex], with: .bottom)
         scrollToBottom()
     }
     
